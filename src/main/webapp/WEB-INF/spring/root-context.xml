@@ -32,4 +32,7 @@
 		<constructor-arg index="0" ref="sqlSessionFactory" /> <!-- "sqlSessionFactory"가 생성될 때 자동으로 만들어줌? -->
 	</bean>
 	
+	<!-- 가공처리할 SessionFactory객체에 매퍼의 정보를 주입하기위한 DAO객체 위치를 설정 -->
+	<mybatis-spring:scan base-package="com.spring.javaProjectS.dao"/>
+	
 </beans>
