@@ -43,6 +43,34 @@ public class MessageController {
 			model.addAttribute("msg", "수정에 실패하였습니다.");
 			model.addAttribute("url","user2/user2List");
 		}
+		else if(msgFalg.equals("guestInputOk")) {
+			model.addAttribute("msg", "방명록 글이 등록되었습니다.");
+			model.addAttribute("url","guest/guestList");
+		}
+		else if(msgFalg.equals("guestInputNo")) {
+			model.addAttribute("msg", "방명록 등록에 실패하였습니다.");
+			model.addAttribute("url","guest/guestInput");
+		}
+		else if(msgFalg.equals("adminLoginOk")) {
+			model.addAttribute("msg", "관리자님 로그인 되었습니다.");
+			model.addAttribute("url","guest/guestList");
+		}
+		else if(msgFalg.equals("adminLoginNo")) {
+			model.addAttribute("msg", "아이디 혹은 비밀번호를 확인해주세요.");
+			model.addAttribute("url","guest/adminLogin");
+		}
+		else if(msgFalg.equals("guestDeleteOk")) {
+			model.addAttribute("msg", "방명록이 삭제되었습니다.");
+			model.addAttribute("url","guest/guestList");
+		}
+		else if(msgFalg.equals("guestDeleteNo")) {
+			model.addAttribute("msg", "방명록 삭제에 실패하였습니다.");
+			model.addAttribute("url","guest/guestList");
+		}
+		else if(msgFalg.equals("adminLogout")) {
+			model.addAttribute("msg", "로그아웃 되었습니다.");
+			model.addAttribute("url","guest/guestList");
+		}
 			
 		return "include/message";
 	}

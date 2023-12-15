@@ -64,10 +64,8 @@
 <body>
 <!-- 메뉴 -->
 <jsp:include page="/WEB-INF/views/include/nav.jsp"></jsp:include>
-
 <!-- Page content -->
 <div class="w3-content" style="max-width:2000px;margin-top:46px">
-
 <!-- slide show -->
 <jsp:include page="/WEB-INF/views/include/slide2.jsp"></jsp:include>
 <p><br/></p>
@@ -75,13 +73,14 @@
     <h2>회 원 리 스 트2</h2>
     <br/>
     <div class="row mb-2">
-    	<div class="col">
+    	<div class="col-7">
     		<input type="button" onclick="fNewForm()" value="회원가입폼" class="btn btn-primary btn-sm"/>
     	</div>
-    	<div class="col text-right">
-    		개별검색 : 
-	    	<input type="text" name="name" id="name" value="${name}"/>
-	    	<input type="button" value="검색" onclick="nameSearch()" class="btn btn-success"/>
+    	<div class="col-5 text-right"> 
+    		<div class="input-group">
+	    	<input type="text" name="name" id="name" value="${name}" class="form-contrl"/>
+	    	<div class="input-group-append"><input type="button" value="검색" onclick="nameSearch()" class="btn btn-success"/></div>
+    		</div>
     	</div>
     </div>
     <div id="demo"></div>
@@ -145,5 +144,7 @@
   </div>
 
 <p><br/></p>
+<!-- footer -->
+<jsp:include page="/WEB-INF/views/include/footer.jsp"></jsp:include>
 </body>
 </html>

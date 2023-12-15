@@ -63,5 +63,7 @@
     <div><a href="${ctp}/" class="btn btn-warning">돌아가기</a></div>
 </div>
 <p><br/></p>
+<!-- footer -->
+<jsp:include page="/WEB-INF/views/include/footer.jsp"></jsp:include>
 </body>
 </html>
