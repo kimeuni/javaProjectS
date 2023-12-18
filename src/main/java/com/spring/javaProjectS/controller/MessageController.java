@@ -71,6 +71,30 @@ public class MessageController {
 			model.addAttribute("msg", "로그아웃 되었습니다.");
 			model.addAttribute("url","guest/guestList");
 		}
+		else if(msgFalg.equals("mailSendOk")) {
+			model.addAttribute("msg", "메일이 성공적으로 전송되었습니다.");
+			model.addAttribute("url","study/mail/mail");
+		}
+		else if(msgFalg.equals("memberLoginNo")) {
+			model.addAttribute("msg", "로그인에 실패하였습니다.");
+			model.addAttribute("url","member/memberLogin");
+		}
+		else if(msgFalg.equals("memberLoginOk")) {
+			model.addAttribute("msg", mid + "님 로그인 되었습니다.");
+			model.addAttribute("url","member/memberMain");
+		}
+		else if(msgFalg.equals("memberLogoutOk")) {
+			model.addAttribute("msg",mid + "님 로그아웃 되었습니다.");
+			model.addAttribute("url","member/memberLogin");
+		}
+		else if(msgFalg.equals("memberJoinOk")) {
+			model.addAttribute("msg", "회원가입에 성공하였습니다.");
+			model.addAttribute("url","member/memberLogin");
+		}
+		else if(msgFalg.equals("memberJoinNo")) {
+			model.addAttribute("msg","회원가입에 실패하였습니다,");
+			model.addAttribute("url","member/memberJoin");
+		}
 			
 		return "include/message";
 	}
