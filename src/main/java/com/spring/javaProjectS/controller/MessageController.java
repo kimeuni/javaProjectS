@@ -95,6 +95,14 @@ public class MessageController {
 			model.addAttribute("msg","회원가입에 실패하였습니다,");
 			model.addAttribute("url","member/memberJoin");
 		}
+		else if(msgFalg.equals("memberDelOk")) {
+			model.addAttribute("msg", "회원 탈퇴되었습니다.");
+			model.addAttribute("url","member/memberLogin");
+		}
+		else if(msgFalg.equals("memberDelNo")) {
+			model.addAttribute("msg","회원 탈퇴에 실패하였습니다.");
+			model.addAttribute("url","member/memberMain");
+		}
 			
 		return "include/message";
 	}

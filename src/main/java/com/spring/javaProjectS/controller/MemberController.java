@@ -157,14 +157,24 @@ public class MemberController {
 	@RequestMapping(value = "/memberNickCheck", method = RequestMethod.POST, produces = "application/text; charset=utf8")
 	public String memberNickCheckPost(String nickName){
 		
-		System.out.println("nickName" + nickName);
-		
 		MemberVO vo = memberService.getMemberNicKCheck(nickName);
 		
 		if(vo != null) {
 			return "1";
 		}
 		else return "0";
+	}
+	
+	// 회원 탈퇴 신청
+	@RequestMapping(value = "/memberDelOk", method = RequestMethod.GET)
+	public String memberDelOkGet(String mid) {
+		
+		System.out.println("mid : " + mid);
+		
+		int res = memberService.setUserDelUpdate(mid);
+		
+		if(res != 0) return "redirect:/message/memberDelOk";
+		else return "redirect:/message/memberDelNo";
 	}
 	
 }

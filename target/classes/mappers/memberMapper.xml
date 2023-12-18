@@ -12,4 +12,8 @@
 	<insert id="setMemberJoinOk" >
 		insert into member2 values(default,#{vo.mid},#{vo.pwd},#{vo.nickName},#{vo.name},#{vo.gender},#{vo.birthday},#{vo.tel},#{vo.address},#{vo.email},#{vo.homePage},#{vo.job},#{vo.hobby},#{vo.photo},#{vo.content},#{vo.userInfor},default,default,default,default,default,default,default);
 	</insert>
+	
+	<update id="setUserDelUpdate">
+		update member2 set userDel='OK' where mid = #{mid};
+	</update>
 </mapper>
