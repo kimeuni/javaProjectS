@@ -25,7 +25,7 @@
     	$("#searchMid").show();
     }
     
-    // 이메일 검색처리
+    // 인증 번호 이메일 전송
     function emailFind() {
     	let email = $("#emailSearch").val().trim();
     	if(email == "") {
@@ -37,12 +37,12 @@
     	$("#spinner").show();
     	
     	$.ajax({
-    		url  : "${ctp}/member/memberEmailCodeOk",
+    		url  : "${ctp}/member/memberEmailCode",
     		type : "post",
     		data : {email : email},
     		success : function(res) {
     			if(res != "0"){
-    				alert("res : " + res);
+    				alert("인증번호가 발송되었습니다.");
     				$("#spinner").hide();
 			    	$("#codeOk").show();
     			}
@@ -57,47 +57,54 @@
     	});
     }
     
-    // 이메일 검색처리
-    /*
-    function emailFind() {
+    // 이메일로 아이디 검색처리
+    function MailCodeOk() {
     	let email = $("#emailSearch").val().trim();
-    	if(email == "") {
-    		alert("가입시 등록한 email을 입력하세요");
-    		$("#emailSearch").focus();
+    	let code = $("#code").val().trim();
+    	if(code == "") {
+    		alert("인증번호를 입력해주세요.");
+    		$("#code").focus();
     		return false;
     	}
     	
-    	$("#spinner").show();
+    	let query = {
+    		email : email,
+    		code : code
+    	}
     	
     	$.ajax({
-    		url  : "memberEmailCodeOk",
+    		url  : "${ctp}/member/memberEmailCodeOk",
     		type : "post",
-    		data : {email : email},
+    		data : query,
     		success:function(res) {
-    			let temp = res.split("/");
-    			console.log("temp :", temp);
-    			let str = '검색결과 : <br/><font color=blue><b>';
-    			for(let i=0; i<temp.length; i++) {
-    				let jump = Math.floor((Math.random()*(4-2)) + 2);
-    				let tempMid = temp[i].substring(0,1);
-    				console.log("tempMid",tempMid,", jump",jump);
-    				for(let j=1; j<temp[i].length; j++) {
-    					if(j % jump == 0) tempMid += "*";
-    					else tempMid += temp[i].substring(j,j+1);
-    				}
-	    			str += tempMid;
-	    			
-	    			str += "<br/>";
+    			if(res == "1") alert("인증번호가 만료되었습니다.");
+    			else if (res == "2") alert("작성하신 인증번호가 일치하지 않습니다");
+    			else {
+	    			let temp = res.split("/");
+	    			console.log("temp :", temp);
+	    			let str = '검색결과 : <br/><font color=blue><b>';
+	    			for(let i=0; i<temp.length; i++) {
+	    				let jump = Math.floor((Math.random()*(4-2)) + 2);
+	    				let tempMid = temp[i].substring(0,1);
+	    				console.log("tempMid",tempMid,", jump",jump);
+	    				for(let j=1; j<temp[i].length; j++) {
+	    					if(j % jump == 0) tempMid += "*";
+	    					else tempMid += temp[i].substring(j,j+1);
+	    				}
+		    			str += tempMid;
+		    			
+		    			str += "<br/>";
+	    			}
+	    			str += '</b></font>';
+	    			$("#codeOk").hide();
+	    			midShow.innerHTML = str;
     			}
-    			str += '</b></font>';
-    			midShow.innerHTML = str;
     		},
     		error : function() {
     			alert("전송 오류!");
     		}
     	});
     }
-    */
     
     // 비밀번호 검색폼 보여주기
     function pwdSearch() {
@@ -245,9 +252,9 @@
 			<div class="col-2">인증번호 :</div>
 			<div class="col-9">
 				<div class="input-group-append">
-					<input type="text" name="code" id="code" class="form-control"  />
+					<input type="text" name="code" id="code" value="${sMailCode}" class="form-control"  />
 					<div class="input-group-append">
-						<input type="button" value="인증하기" class="btn btn-success"/>
+						<input type="button" value="인증하기" onclick="MailCodeOk()" class="btn btn-success"/>
 					</div>
 				</div>
 			</div>

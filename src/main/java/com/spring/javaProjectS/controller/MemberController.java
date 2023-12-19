@@ -1,5 +1,6 @@
 package com.spring.javaProjectS.controller;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.mail.MessagingException;
@@ -280,8 +281,8 @@ public class MemberController {
 		messageHelper.setText(content, true); // content를 이걸로 다시 변경하겠다.
 		
 		// 본문에 기재된 그림파일의 경로와 파일명을 별도로 표시한다. 그런 후 다시 보관함에 저장한다.
-		FileSystemResource file = new FileSystemResource("D:\\JavaProject\\springframework\\works\\javaProjectS\\src\\main\\webapp\\resources\\images\\main.png"); 
-//		FileSystemResource file = new FileSystemResource(request.getSession().getServletContext().getRealPath("/resources/images/main.png")); 
+//		FileSystemResource file = new FileSystemResource("D:\\JavaProject\\springframework\\works\\javaProjectS\\src\\main\\webapp\\resources\\images\\main.png"); 
+		FileSystemResource file = new FileSystemResource(request.getSession().getServletContext().getRealPath("/resources/images/main.png")); 
 		messageHelper.addInline("main.png", file); // 그림파일이 어떤건지 알려준다. //본문에 추가할 때는 addInline을 사용
 		
 		// 메일 전송하기
@@ -291,15 +292,58 @@ public class MemberController {
 	
 	// 아이디 찾기 메일 인증번호 발송 (ajax)
 	@ResponseBody
-	@RequestMapping(value = "/memberEmailCodeOk", method = RequestMethod.POST)
-	public String memberEmailCodeOkPost(String email) {
+	@RequestMapping(value = "/memberEmailCode", method = RequestMethod.POST)
+	public String memberEmailCodePost(String email, HttpSession session) throws MessagingException {
 		
 		System.out.println("1");
 		
-		MemberVO vo = memberService.getMemberEmailCheck(email);
+		List<MemberVO> vos = memberService.getMemberEmailList(email);
 		
-		if(vo != null) return "1";
+		if(vos != null) {
+			UUID uid = UUID.randomUUID();
+			
+			// 발급받은 인증코드를 작성한 메일주소로 전송처리한다.
+			String title = "인증번호가 도착했습니다.";
+			String mailFlag = "인증 번호 : " + uid.toString().substring(0,8);
+			String res = mailSend(email, title, mailFlag);
+			
+			if(res == "1") {
+				// 메세지를 전송했으면 인증번호를 세션에 저장함(메일로 받은 인증번호가 맞는지 아닌지, 확인 가능하도록)
+				session.setAttribute("sMailCode", uid.toString().substring(0,8));
+				return "1";
+			}
+			else return "0";
+		}
 		else return "0";
+	}
+	
+	// 이메일로 아이디 찾기 (ajax)
+	@ResponseBody
+	@RequestMapping(value = "/memberEmailCodeOk", method = RequestMethod.POST)
+	public String memberEmailCodeOkPost(String code,String email,HttpSession session) {
+		
+		String sCode = session.getAttribute("sMailCode")==null? "" : (String)session.getAttribute("sMailCode");
+		
+		if(sCode.equals("")) {
+			return "1";
+		}
+		else if(!sCode.equals(code)) {
+			return "2";
+		}
+		else {
+			// 인증코드가 맞을 시 세션 삭제
+			session.removeAttribute("sMailCode");
+			
+			// 같은 이메일을 사용하는 유저 전부 가져오기
+			List<MemberVO> vos = memberService.getMemberEmailList(email);
+			String str = "";
+			if(vos != null) {
+				for(int i=0; i<vos.size(); i++) {
+					str += vos.get(i).getMid() + "/";
+				}
+			}
+			return str;
+		}
 	}
 	
 }

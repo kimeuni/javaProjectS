@@ -1,5 +1,7 @@
 package com.spring.javaProjectS.service;
 
+import java.util.List;
+
 import com.spring.javaProjectS.vo.MemberVO;
 
 public interface MemberService {
@@ -15,5 +17,7 @@ public interface MemberService {
 	public void setMemberPasswordUpdate(String mid, String pwd);
 
 	public MemberVO getMemberEmailCheck(String email);
+
+	public List<MemberVO> getMemberEmailList(String email);
 
 }

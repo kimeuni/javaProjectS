@@ -24,6 +24,7 @@
 			<exclude-mapping path="/member/memberJoin"/>
 			<exclude-mapping path="/member/memberIdCheck"/>
 			<exclude-mapping path="/member/memberNickCheck"/>
+			<exclude-mapping path="/member/memberEmailCode"/>
 			<exclude-mapping path="/member/memberEmailCodeOk"/>
 			<exclude-mapping path="/guest/**"/>
 			<exclude-mapping path="/message/**"/>
