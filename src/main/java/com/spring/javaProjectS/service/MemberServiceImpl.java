@@ -34,5 +34,15 @@ public class MemberServiceImpl implements MemberService {
 	public int setUserDelUpdate(String mid) {
 		return memberDAO.setUserDelUpdate(mid);
 	}
+
+	@Override
+	public void setMemberPasswordUpdate(String mid, String pwd) {
+		memberDAO.setMemberPasswordUpdate(mid, pwd);
+	}
+
+	@Override
+	public MemberVO getMemberEmailCheck(String email) {
+		return memberDAO.getMemberEmailCheck(email);
+	}
 	
 }

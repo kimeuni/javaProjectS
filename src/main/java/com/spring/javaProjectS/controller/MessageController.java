@@ -103,6 +103,30 @@ public class MessageController {
 			model.addAttribute("msg","회원 탈퇴에 실패하였습니다.");
 			model.addAttribute("url","member/memberMain");
 		}
+		else if(msgFalg.equals("memberUpdateViewNo")) {
+			model.addAttribute("msg","화면에 접속중에 문제가 발생하였습니다.");
+			model.addAttribute("url","member/memberMain");
+		}
+		else if(msgFalg.equals("boardInputOk")) {
+			model.addAttribute("msg","게시판에 글이 등록되었습니다.");
+			model.addAttribute("url","board/boardList");
+		}
+		else if(msgFalg.equals("boardInputNo")) {
+			model.addAttribute("msg","게시판 글 등록에 실패하였습니다.");
+			model.addAttribute("url","board/boardInput");
+		}
+		else if(msgFalg.equals("adminNo")) {
+			model.addAttribute("msg","관리자만 접속 가능합니다.");
+			model.addAttribute("url","/");
+		}
+		else if(msgFalg.equals("memberLevelNo")) {
+			model.addAttribute("msg","해당 등급은 접속이 불가능합니다.");
+			model.addAttribute("url","/");
+		}
+		else if(msgFalg.equals("memberNo")) {
+			model.addAttribute("msg","로그인후 사용하세요");
+			model.addAttribute("url","/member/meberLogin");
+		}
 			
 		return "include/message";
 	}

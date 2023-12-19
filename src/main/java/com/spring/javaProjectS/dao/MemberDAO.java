@@ -14,4 +14,8 @@ public interface MemberDAO {
 
 	public int setUserDelUpdate(@Param("mid") String mid);
 
+	public void setMemberPasswordUpdate(@Param("mid") String mid,@Param("pwd") String pwd);
+
+	public MemberVO getMemberEmailCheck(@Param("email") String email);
+
 }

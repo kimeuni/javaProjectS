@@ -12,4 +12,8 @@ public interface MemberService {
 
 	public int setUserDelUpdate(String mid);
 
+	public void setMemberPasswordUpdate(String mid, String pwd);
+
+	public MemberVO getMemberEmailCheck(String email);
+
 }

@@ -6,7 +6,7 @@
 	function userDel(mid){
 		let ans1 = confirm("회원 탈퇴 하시겠습니까?");
 		if(ans1) {
-			let ans2 = confirm("정말로 회원 탈퇴 하시겠습니까? <br/> 탈퇴 후 30일간 같은 아이디 및 닉네임은 사용이 불가능합니다.");
+			let ans2 = confirm("정말로 회원 탈퇴 하시겠습니까? \n탈퇴 후 30일간 같은 아이디 및 닉네임은 사용이 불가능합니다.");
 			if(ans2){
 				location.href="${ctp}/member/memberDelOk?mid="+mid;
 			}
@@ -49,10 +49,10 @@
 	      <div class="w3-dropdown-content w3-bar-block w3-card-4">
 	        <a href="${ctp}/user/userList" class="w3-bar-item w3-button">일정관리</a>
 	        <a href="${ctp}/user2/user2List" class="w3-bar-item w3-button">회원리스트</a>
-	        <a href="#" class="w3-bar-item w3-button">비밀번호변경</a>
-	        <a href="#" class="w3-bar-item w3-button">회원정보수정</a>
+	        <a href="${ctp}/member/memberPwdCheck?flag=pwdChange" class="w3-bar-item w3-button">비밀번호변경</a>
+	        <a href="${ctp}/member/memberPwdCheck?flag=update" class="w3-bar-item w3-button">회원정보수정</a>
 	        <a href="javascript:userDel('${sMid}')" class="w3-bar-item w3-button">회원탈퇴</a>
-	        <a href="#" class="w3-bar-item w3-button">관리자</a>
+	        <c:if test="${sLevel == 0}"><a href="#" class="w3-bar-item w3-button">관리자</a></c:if>
 	      </div>
 	    </div>
     </c:if>

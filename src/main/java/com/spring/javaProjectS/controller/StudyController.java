@@ -214,6 +214,7 @@ public class StudyController {
 		return "study/mail/mailForm";
 	}
 	
+	// 메일 전송하기
 	@RequestMapping(value = "/mail/mail", method = RequestMethod.POST)
 	public String mailPost(MailVO vo, HttpServletRequest request) throws MessagingException {
 		String toMail = vo.getToMail();

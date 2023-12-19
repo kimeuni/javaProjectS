@@ -12,11 +12,28 @@
 	</style>
 	<script>
 		'use strict'
-		function pwdCheck(){
+		function pwdCheck(flag,mid){
 			let pwd = $("#pwd").val();
 			
+			let query = {
+				flag : flag,
+				mid : mid,
+				pwd : pwd
+			}
 			$.ajax({
-				
+				url : "${ctp}/member/memberPwdCheckOk",
+				type : "post",
+				data : query,
+				success : function(res){
+					if(res == "0"){
+						alert("비밀번호를 다시 확인해주세요.");
+					}
+					else if(res == "update") location.href="${ctp}/member/memberUpdate?mid="+mid;
+					else if(res == "pwdChange") location.href="${ctp}/member/memberPwdChange";
+				},
+				error : function() {
+					alert("전송 오류")
+				}
 			});
 		}
 	</script>
@@ -30,13 +47,13 @@
 	<h2 style="text-align:center;">비밀번호 확인</h2>
 	<p><br/></p>
 	<div class="container">
-		<form name="loginForm" method="post">
+		<form >
 			<table class="table table-bordered " style="width:800px; margin:0 auto;">
 				<tr>
 					<th>비밀번호 확인</th>
 					<td>
 						<input type="password" name="pwd" id="pwd"  autofocus required class="form-control" />
-						<input type="submit" value="로그인" onclick="pwdCheck()" class="btn btn-success mr-3"/>
+						<input type="button" value="확인" onclick="pwdCheck('${flag}','${sMid}')" class="btn btn-success form-control mt-3 mr-3"/>
 					</td>
 				</tr>
 			</table>
