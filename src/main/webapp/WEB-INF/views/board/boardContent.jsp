@@ -14,6 +14,7 @@
     th {
       text-align: center;
       background-color: #eee;
+      width: 150px;
     }
   </style>
   <script>
@@ -74,7 +75,7 @@
     // 게시글 삭제
     function boardDelete() {
     	let ans = confirm("현재 게시글을 삭제 하시겠습니까?");
-    	if(ans) location.href = "boardDelete?idx=${vo.idx}";
+    	if(ans) location.href = "boardDelete?idx=${vo.idx}&pag=${pag}&pageSize=${pageSize}";
     }
     
     // 댓글 달기

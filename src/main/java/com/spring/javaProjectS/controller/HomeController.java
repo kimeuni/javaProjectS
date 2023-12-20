@@ -48,7 +48,7 @@ public class HomeController {
 		
 		//request.getSession().getServletContext().getRealPath() 이렇게 적는 것을 권장 한다고 함.
 		// 절대경로로 지정할 것. //여긴 서버에 넣을 실제 주소...
-		String realPath = request.getSession().getServletContext().getRealPath("/resources/data/ckeditor/board/");
+		String realPath = request.getSession().getServletContext().getRealPath("/resources/data/ckeditor/");
 		String oFileName = upload.getOriginalFilename(); // 파일 원본이름 가져오기
 		
 		// 저장되는 파일명 중복되지 않도록 (날짜 + 원본 파일명)
@@ -67,7 +67,7 @@ public class HomeController {
 		PrintWriter out = response.getWriter();
 		// 저장되어있는 경로를 읽어서 불러옴?
 		// 여긴 메핑 주소.. (servlet-context에서 설정한 주소)
-		String fileUrl = request.getContextPath() + "/data/ckeditor/board/" + oFileName;
+		String fileUrl = request.getContextPath() + "/data/ckeditor/" + oFileName;
 		// JSON은 가운데 들어간다고 해서 '' 사용 불가.. 그래서 \""를 사용, 변수 : 값
 		// uploaded : 업로드 시킬 위치 (예약어)
 		out.println("{\"originalFilename\": \""+ oFileName +"\", \"uploaded\":1, \"url\": \""+ fileUrl +"\"}");

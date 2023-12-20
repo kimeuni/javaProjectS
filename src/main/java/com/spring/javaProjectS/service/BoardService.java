@@ -6,10 +6,20 @@ import com.spring.javaProjectS.vo.BoardVO;
 
 public interface BoardService {
 
-	public List<BoardVO> getBoardList();
-
 	public int setBoardInput(BoardVO vo);
 
 	public BoardVO getBoardContent(int idx);
+
+	public List<BoardVO> getBoardList(int startIndexNo, int pageSize);
+
+	public void imgCheck(String content);
+
+	public int setBoardDelete(int idx);
+
+	public void imgDelete(String content);
+
+	public void imgBackUp(String content);
+
+	public int setBoardUpdate(BoardVO vo);
 
 }

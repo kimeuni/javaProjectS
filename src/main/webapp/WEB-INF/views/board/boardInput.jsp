@@ -48,7 +48,8 @@
         //content에 대한 것을 바꿀꺼야..  //CKEDITOR는 명령어
         CKEDITOR.replace("content",{
         	height:450,
-        	filebrowserUploadUrl:"${ctp}/imageUpload" /* 파일(이미지 등) 업로드시에 매필경로[직접 만듬] */ 
+        	filebrowserUploadUrl:"${ctp}/imageUpload", /* 파일(이미지 등) 업로드시에 매필경로[직접 만듬] */
+        	uploadUrl : "${ctp}/imageUpload" //여러개의 그림파일을 드래그&드롭해서 올릴 수 있다. //업로드 시키는 파일의 위치
         });
         </script>
       </tr>

@@ -5,12 +5,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class MessageController {
 	
 	@RequestMapping(value = "/message/{msgFalg}", method = RequestMethod.GET )
-	public String msgGet(@PathVariable String msgFalg, String mid, Model model) {
+	public String msgGet(@PathVariable String msgFalg, String mid, Model model,
+				@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
+				@RequestParam(name="pageSize", defaultValue = "5", required = false) int pageSize,
+				@RequestParam(name="idx", defaultValue = "0", required = false) int idx
+			) {
 		if(msgFalg.equals("userDeleteOk")) {
 			model.addAttribute("msg", "user가 삭제되었습니다.");
 			model.addAttribute("url","user/userList");
@@ -125,7 +130,23 @@ public class MessageController {
 		}
 		else if(msgFalg.equals("memberNo")) {
 			model.addAttribute("msg","로그인후 사용하세요");
-			model.addAttribute("url","/member/meberLogin");
+			model.addAttribute("url","member/memberLogin");
+		}
+		else if(msgFalg.equals("boardDeleteOk")) {
+			model.addAttribute("msg","게시글이 삭제되었습니다.");
+			model.addAttribute("url","board/boardList?pag="+pag + "&pageSize="+ pageSize);
+		}
+		else if(msgFalg.equals("boardDeleteNo")) {
+			model.addAttribute("msg","게시글 삭제에 실패하였습니다.");
+			model.addAttribute("url","board/boardContent?idx="+idx+"&pag="+pag+"&pageSize="+pageSize);
+		}
+		else if(msgFalg.equals("boardUpdateOk")) {
+			model.addAttribute("msg","게시글이 수정되었습니다.");
+			model.addAttribute("url","board/boardContent?idx="+idx+"&pag="+pag + "&pageSize="+ pageSize);
+		}
+		else if(msgFalg.equals("boardUpdateNo")) {
+			model.addAttribute("msg","게시글 수정에 실패하였습니다.");
+			model.addAttribute("url","board/boardUpdate?idx="+idx+"&pag="+pag+"&pageSize="+pageSize);
 		}
 			
 		return "include/message";

@@ -7,6 +7,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>boardUpdate.jsp</title>
+  <script src="${ctp}/ckeditor/ckeditor.js"></script>
   <jsp:include page="/WEB-INF/views/include/bs4.jsp" />
   <style>
     th {
@@ -22,7 +23,7 @@
 <p><br/></p>
 <div class="container">
   <h2 class="text-center">게 시 판 글 수 정 하 기</h2>
-  <form name="myform" method="post" action="boardUpdateOk.bo">
+  <form name="myform" method="post">
     <table class="table table-bordered">
       <tr>
         <th>글쓴이</th>
@@ -40,9 +41,24 @@
         <th>홈페이지</th>
         <td><input type="text" name="homePage" id="homePage" value="${vo.homePage}" class="form-control"/></td>
       </tr>
+      <!-- 
       <tr>
         <th>글내용</th>
         <td><textarea rows="6" name="content" id="content" class="form-control" required>${vo.content}</textarea></td>
+      </tr>
+       -->
+       <!-- ckeditor를 사용 -->
+      <tr>
+        <th>글내용</th>
+        <td><textarea rows="6" name="content" id="CKEDITOR" class="form-control" required>${vo.content}</textarea></td>
+        <script>
+        //content에 대한 것을 바꿀꺼야..  //CKEDITOR는 명령어
+        CKEDITOR.replace("content",{
+        	height:450,
+        	filebrowserUploadUrl:"${ctp}/imageUpload", /* 파일(이미지 등) 업로드시에 매필경로[직접 만듬] */
+        	uploadUrl : "${ctp}/imageUpload" //여러개의 그림파일을 드래그&드롭해서 올릴 수 있다. //업로드 시키는 파일의 위치
+        });
+        </script>
       </tr>
       <tr>
         <th>공개여부</th>
@@ -63,6 +79,7 @@
     <input type="hidden" name="idx" value="${vo.idx}"/>
     <input type="hidden" name="pag" value="${pag}"/>
     <input type="hidden" name="pageSize" value="${pageSize}"/>
+    <input type="hidden" name="nickName" value="${sNickName}"/>
   </form>
 </div>
 <p><br/></p>
