@@ -18,7 +18,8 @@
     }
   </style>
   <script>
-    'use strict';
+    'use strict'; 
+    //수정
     
     // 좋아요 조회수 증가(중복불허....숙제...)
     function goodCheck() {
