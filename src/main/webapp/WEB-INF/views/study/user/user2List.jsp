@@ -27,11 +27,11 @@
     		str += '<table class="table table-bordered"';
     		str += '<tr>';
     		str += '<th>아이디</th>';
-    		str += '<td><input type="text" name="mid" id="mid" required class="form-control"/></td>';
+    		str += '<td><input type="text" name="mid" id="mid"  class="form-control"/></td>';
     		str += '</tr>';
     		str += '<tr>';
     		str += '<th>성명</th>';
-    		str += '<td><input type="text" name="name" id="name"required class="form-control"/></td>';
+    		str += '<td><input type="text" name="name" id="name" class="form-control"/></td>';
     		str += '</tr>';
     		str += '<tr>';
     		str += '<th>나이</th>';

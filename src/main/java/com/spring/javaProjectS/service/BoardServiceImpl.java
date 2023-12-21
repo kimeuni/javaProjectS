@@ -15,6 +15,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.spring.javaProjectS.dao.BoardDAO;
+import com.spring.javaProjectS.vo.BoardReplyVO;
 import com.spring.javaProjectS.vo.BoardVO;
 
 @Service
@@ -201,4 +202,41 @@ public class BoardServiceImpl implements BoardService {
 	public int setBoardUpdate(BoardVO vo) {
 		return boardDAO.setBoardUpdate(vo);
 	}
+
+	@Override
+	public BoardVO getPreNexSearch(int idx, String str) {
+		return boardDAO.getPreNexSearch(idx,str);
+	}
+
+	@Override
+	public BoardReplyVO getBoardParentReplyCheck(int boardIdx) {
+		return boardDAO.getBoardParentReplyCheck(boardIdx);
+	}
+
+	@Override
+	public int setBoardReplyInput(BoardReplyVO replyVO) {
+		return boardDAO.setBoardReplyInput(replyVO);
+	}
+
+	@Override
+	public List<BoardReplyVO> getBoard2Reply(int idx) {
+		return boardDAO.getBoard2Reply(idx);
+	}
+
+	@Override
+	public void setReplyOrderUpdate(int boardIdx, int re_order) {
+		boardDAO.setReplyOrderUpdate(boardIdx,re_order);
+	}
+
+	@Override
+	public void setReadNumPlus(int idx) {
+		boardDAO.setReadNumPlus(idx);
+	}
+
+	@Override
+	public List<BoardVO> getboardSearchList(String search, String searchString, int startIndexNo, int pageSize) {
+		return boardDAO.getboardSearchList(search, searchString, startIndexNo, pageSize);
+	}
+	
+	
 }

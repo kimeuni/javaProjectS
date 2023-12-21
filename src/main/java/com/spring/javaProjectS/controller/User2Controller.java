@@ -5,6 +5,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -31,10 +34,39 @@ public class User2Controller {
 	}
 	
 	// 유저 회원가입
+	// validator를 이용한 backEnd 유효성 검사하기 검사후 정확한 자료를 DB에 저장시켜준다...
 	@RequestMapping(value = "/user2List",method = RequestMethod.POST)
-	public String user2ListPost(UserVO vo) {
-		int res = userService.setUser2Input(vo);
+	public String user2ListPost(@Validated UserVO vo, BindingResult bindingResult, Model model) {
 		
+		//System.out.println("vo" + vo);
+		System.out.println("error :" + bindingResult.hasErrors());
+		
+		if(bindingResult.hasFieldErrors()) {
+			List<ObjectError> list = bindingResult.getAllErrors();
+			
+			String temp = "";
+			for(ObjectError e : list) {
+				System.out.println("메세지 :"+ e.getDefaultMessage());
+				temp = e.getDefaultMessage().substring(e.getDefaultMessage().indexOf("/")+1);
+				if(temp.equals("midEmpty") || temp.equals("midSizeNo") || temp.equals("nameEmpty") || temp.equals("nameSizeNo") || temp.equals("ageEmpty") || temp.equals("ageRangeNo")) {
+					break; //반복문(for문)을 빠져나감
+				}
+				
+				
+			}
+			if(temp.equals("midEmpty")) temp = "아이디";
+			else if(temp.equals("midSizeNo")) temp = "아이디";
+			else if(temp.equals("nameEmpty")) temp = "성명";
+			else if(temp.equals("nameSizeNo")) temp = "성명";
+			else if(temp.equals("ageEmpty")) temp = "나이";
+			else if(temp.equals("ageRangeNo")) temp = "나이";
+			
+			model.addAttribute("temp",temp);
+			
+			System.out.println("temp : " + temp);
+			return "redirect:/message/validatorError";
+		}
+		int res = userService.setUser2Input(vo);
 		if(res != 0 ) return "redirect:/message/user2InputOk"; 
 		else return "redirect:/message/user2InputNo";
 	}

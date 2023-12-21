@@ -8,10 +8,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.spring.javaProjectS.pagination.PageProcess;
 import com.spring.javaProjectS.pagination.PageVO;
 import com.spring.javaProjectS.service.BoardService;
+import com.spring.javaProjectS.vo.BoardReplyVO;
 import com.spring.javaProjectS.vo.BoardVO;
 
 @Controller
@@ -69,11 +71,23 @@ public class BoardController {
 				@RequestParam(name="pageSize", defaultValue = "5", required = false) int pageSize
 			) {
 		
+		// 조회수 증가하기
+		boardService.setReadNumPlus(idx);
+		
 		BoardVO vo = boardService.getBoardContent(idx);
 		model.addAttribute("vo",vo);
 		model.addAttribute("pag",pag);
 		model.addAttribute("pageSize",pageSize);
 		
+		// 이전글 다음글 처리
+		BoardVO preVo = boardService.getPreNexSearch(idx, "preVo");
+		BoardVO nextVo = boardService.getPreNexSearch(idx, "nextVo");
+		model.addAttribute("preVo",preVo);
+		model.addAttribute("nextVo",nextVo);
+		
+		// 댓글(대댓글) 추가로 처리
+		List<BoardReplyVO> replyVos = boardService.getBoard2Reply(idx);
+		model.addAttribute("replyVos",replyVos);
 		
 		return "board/boardContent";
 	}
@@ -159,4 +173,72 @@ public class BoardController {
 		else return "redirect:/message/boardUpdateNo";
 		
 	}
+	
+	// 부모댓글 입력처리
+	@ResponseBody
+	@RequestMapping(value = "/boardReplyInput", method = RequestMethod.POST)
+	public String boardReplyInputPost(Model model, BoardReplyVO replyVO
+			) {
+		// 부모댓글의 경우 re_step=0, re_order=1로 처리한다. (단, 원본글의 첫번째 (부모댓글)댓글은 re_order=1이지만, 2번째이상이라면, 마지막 부모댓글의 re_order보다 +1 처리시켜준다.)
+		// 부모댓글 체크 (부모 댓글이 있는지 없는지 체크)
+		BoardReplyVO replyParentVO = boardService.getBoardParentReplyCheck(replyVO.getBoardIdx());
+		
+		// 기존 글에 부모 댓글이 달린 게 없으면 re_order를 1로
+		if(replyParentVO == null) {
+			replyVO.setRe_order(1);
+		}
+		// 부모댓글이 1개라도 있으면 기존에 있던 re_order를 +1한다.
+		else {
+			replyVO.setRe_order(replyParentVO.getRe_order()+1);
+		}
+		
+		replyVO.setRe_step(0);
+		
+		int res = boardService.setBoardReplyInput(replyVO);
+		
+		return res +"";
+	}
+	
+	// 대댓글 입력처리 ((부모) 댓글에 대한 답변글)
+	@ResponseBody
+	@RequestMapping(value = "/boardReplyInputRe", method = RequestMethod.POST)
+	public String boardReplyInputRePost(Model model, BoardReplyVO replyVO
+			) {
+		// 답변글일경우는 1.re_step은 부모의 re_step+1, 2.re_order는 부모의 re_order보다 큰 댓글은 모두 +1처리 후, 3.자신의 re_order+1처리한다.
+		replyVO.setRe_step(replyVO.getRe_step() +1);
+		
+		boardService.setReplyOrderUpdate(replyVO.getBoardIdx(), replyVO.getRe_order());
+		
+		replyVO.setRe_order(replyVO.getRe_order()+1);
+		
+		int res = boardService.setBoardReplyInput(replyVO);
+		
+		return res +"";
+	}
+	
+	// 게시글 검색처리
+	@RequestMapping(value = "/boardSearch", method = RequestMethod.GET)
+	public String boardSearchGet(String search, Model model,
+			@RequestParam(name="searchString", defaultValue = "", required = false) String searchString,
+			@RequestParam(name="pag", defaultValue = "1", required = false) int pag,
+			@RequestParam(name="pageSize", defaultValue = "5", required = false) int pageSize) {
+			
+			PageVO pageVO = pageProcess.totRecCnt(pag, pageSize, "board", search, searchString);
+			
+//			System.out.println("pageVO : " + pageVO);
+			
+			List<BoardVO> vos = boardService.getboardSearchList(search,searchString,pageVO.getStartIndexNo(),pageSize);
+			String searchTitle= "";
+			if(pageVO.getSearch().equals("title")) searchTitle = "글제목";
+			else if(pageVO.getSearch().equals("nickName")) searchTitle = "글쓴이";
+			else searchTitle = "글내용";
+			
+			model.addAttribute("searchTitle", searchTitle);
+			model.addAttribute("vos",vos);
+			model.addAttribute("searchCount",vos.size());
+			model.addAttribute("pageVO",pageVO);
+			
+		return "board/boardSearchList";
+	}
+	
 }

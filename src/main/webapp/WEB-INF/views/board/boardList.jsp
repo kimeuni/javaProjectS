@@ -92,7 +92,7 @@
 <br/>
 <!-- 검색기 처리 -->
 <div class="container text-center">
-  <form name="searchForm" method="post" action="boardSearch">
+  <form name="searchForm" method="get" action="boardSearch">
     <b>검색 : </b>
     <select name="search" id="search">
       <option value="title" selected>글제목</option>

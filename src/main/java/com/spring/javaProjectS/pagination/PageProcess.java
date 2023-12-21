@@ -18,12 +18,19 @@ public class PageProcess {
 		PageVO pageVO = new PageVO();
 		
 		int totRecCnt = 0; //초기값
+		String search = "";
 		
 		if(section.equals("board")) {
 			// 만약 part가 있을 시 이렇게 함! part가 안 넘어오면 전체 리스트 출력 아닐 시, 파트에 관한 카테고리만 출력!
 //			if(part.equals("")) totRecCnt = boardDAO.totRecCnt();
 //			else totRecCnt = boardDAO.totRecCnt(part);
-			totRecCnt = boardDAO.totRecCnt();
+			if(part.equals("")) {
+				totRecCnt = boardDAO.totRecCnt();
+			}
+			else {
+				search = part;
+				totRecCnt = boardDAO.totRecCntSearch(search,searchString);
+			}
 		}
 		
 		int totPage = (totRecCnt % pageSize)==0 ? (totRecCnt / pageSize) : (totRecCnt / pageSize) + 1;
@@ -44,7 +51,7 @@ public class PageProcess {
 		pageVO.setCurBlock(curBlock);
 		pageVO.setLastBlock(lastBlock);
 		pageVO.setPart(part);
-		pageVO.setSearch(part);
+		pageVO.setSearch(search);
 		pageVO.setSearchString(searchString);
 		return pageVO;
 	}

@@ -23,17 +23,19 @@ select * from board2;
 
 /* 게시판에 댓글 달기 */
 create table board2Reply (
-  idx      	int not null auto_increment,	/* 댓글의 고유번호 */
+  idx      	int not null auto_increment,		/* 댓글의 고유번호 */
   boardIdx	int not null,						/* 원본글(부모글)의 고유번호(외래키로 설정) */
-  mid				varchar(30) not null,		/* 댓글 올린이의 아이디 */
-  nickName  varchar(30) not null,		/* 댓글 올린이의 닉네임 */
-  wDate			datetime default now(),	/* 댓글 올린 날짜 */
-  hostIp		varchar(50) not null,		/* 댓글 올린 PC의 고유 IP */
-  content   text  not null,					/* 댓글 내용 */  
+  re_step int not null, 						/* 레벨(re_step)에 따른 들여쓰기(계층번호) : 부모댓글의 re_step은 0이다. 대댓글의 경우는 부모re_step+1로 처리한다. */
+  re_order int not null,						/* 댓글의 순서를 결정한다. 부모댓글은 1번, 대댓글의 경우는 부모댓글보다 큰 대댓글에 대하여 're_order + 1' 시키고, 자신은 부모댓글의 re_order보다 1개 더 증가시킨다. */
+  mid varchar(30) not null,						/* 댓글 올린이의 아이디 */
+  nickName varchar(30) not null,				/* 댓글 올린이의 닉네임 */
+  wDate	datetime default now(),					/* 댓글 올린 날짜 */
+  hostIp varchar(50) not null,					/* 댓글 올린 PC의 고유 IP */
+  content text  not null,						/* 댓글 내용 */  
   primary key(idx),
-  foreign key(boardIdx) references board2(idx)
-  on update cascade			/* 부모필드를 수정하면 함께 영향을 받는다. */
-  on delete restrict		/* 부모필를 함부로 삭제할수 없다. */
+  foreign key(boardIdx) references board2(idx)	
+  on update cascade								/* 부모필드를 수정하면 함께 영향을 받는다. */
+  on delete restrict							/* 부모필를 함부로 삭제할수 없다. */
 );
 desc board2Reply;
 
@@ -126,3 +128,11 @@ select timestampdiff(day,wDate,now()) from board2;
 /* 날짜형식(date_format(날짜형식자료, 포멧)) : 년도4자리(%Y), 월(%m), 일(%d), 시간(%H), 분(%i) */
 select wDate, date_format(wDate, '%Y-%m-%d')  from board2;
 select wDate, date_format(wDate, '%Y-%m-%d %H:%i')  from board2;
+
+/* ----------------------------- */
+/* 23-12-21 */
+select *,timestampdiff(hour,wDate,now()) as hour_diff from board2 where hour_diff >=24; /* 안됨 */
+select *,timestampdiff(hour,wDate,now()) as hour_diff from board2 group by idx having hour_diff >=24; -- 게시글 올린지 24이상일 경우만 출력
+select *,timestampdiff(hour,wDate,now()) as hour_diff from board2 group by idx having hour_diff <24; -- 게시글 올린지 24미만일 경우만 출력
+select *,timestampdiff(hour,wDate,now()) as hour_diff from board2;
+select *,datediff(wDate,now()) from board2;
