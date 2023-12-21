@@ -51,6 +51,7 @@ public class User2Controller {
 				if(temp.equals("midEmpty") || temp.equals("midSizeNo") || temp.equals("nameEmpty") || temp.equals("nameSizeNo") || temp.equals("ageEmpty") || temp.equals("ageRangeNo")) {
 					break; //반복문(for문)을 빠져나감
 				}
+				else temp = "typeError";
 				
 				
 			}
@@ -60,6 +61,7 @@ public class User2Controller {
 			else if(temp.equals("nameSizeNo")) temp = "성명";
 			else if(temp.equals("ageEmpty")) temp = "나이";
 			else if(temp.equals("ageRangeNo")) temp = "나이";
+			else if(temp.equals("typeError")) temp = "알 수 없는 문제가 발생, 입력하신 부분(을)";
 			
 			model.addAttribute("temp",temp);
 			

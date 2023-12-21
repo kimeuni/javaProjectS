@@ -1,5 +1,6 @@
 package com.spring.javaProjectS.vo;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -22,6 +23,7 @@ public class UserVO {
 	private String name;
 	
 //	@NotEmpty(message = "나이가 공백입니다./ageEmpty")
+	@Valid
 	@Range(min=19,max=99, message = "나이 범위를 벗어났습니다./ageRangeNo")
 	private int age;
 	
