@@ -1,5 +1,9 @@
 package com.spring.javaProjectS.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.util.ArrayList;
@@ -9,7 +13,9 @@ import java.util.UUID;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
@@ -17,9 +23,13 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.javaProjectS.common.ARIAUtil;
 import com.spring.javaProjectS.common.SecurityUtil;
@@ -257,5 +267,93 @@ public class StudyController {
 		mailSender.send(message);
 		
 		return "redirect:/message/mailSendOk";
+	}
+	
+	// 파일 업로드+서버에 저장된 파일 확인 화면 이동 
+	@RequestMapping(value ="/fileUpload/fileUpload" , method = RequestMethod.GET)
+	public String fileUploadGet(HttpServletRequest request, Model model) {
+		// 여기 경로를 ckediter로 바꾸면.. ckediter에 저장된 임시 파일 들이 나오는데... 확인하고 지울 수 있도록 한다.
+		String realPath = request.getSession().getServletContext().getRealPath("/resources/data/study"); //폴더명으로 본다. (이런식으로 폴더명으로만 적으면 폴더 밑에 있는 모든 파일을 가르킨다.)
+		
+		// .list()를 적으면 "/resources/data/study" 해당 폴더에 들어있는 모든 파일의 목록을 읽어올 수 있다.
+		String[] files = new File(realPath).list();
+		
+		model.addAttribute("files", files);
+		model.addAttribute("fileCount", files.length);
+		
+		return "study/fileUpload/fileUpload";
+	}
+	
+	// 파일 업로드 처리
+	@RequestMapping(value ="/fileUpload/fileUpload" , method = RequestMethod.POST)
+	public String fileUploadPost(HttpServletRequest request, MultipartFile fName, String mid) {
+		
+		int res = studyService.fileUpload(fName,mid);
+		
+		
+		if(res == 1) return "redirect:/message/fileUploadOk";
+		else return "redirect:/message/fileUploadNo";
+	}
+	
+	// 파일 업로드 처리
+	@ResponseBody
+	@RequestMapping(value ="/fileUpload/fileDelete" , method = RequestMethod.POST)
+	public String fileDeletePost(HttpServletRequest request,
+				@RequestParam(name="file", defaultValue = "", required = false) String fName
+			) {
+		String realPath = request.getSession().getServletContext().getRealPath("/resources/data/study/");
+		
+		int res = 0;
+		File file = new File(realPath + fName);
+		
+		// 파일이 존재하는가?
+		if(file.exists()) {
+			// 파일이 존재하면 지우기.
+			file.delete();
+			res = 1;
+		}
+		
+		return res + "";
+	}
+	
+	@RequestMapping(value = "/fileUpload/fileDownAction", method = RequestMethod.GET)
+	public void fileDownActionGet(HttpServletRequest request, HttpServletResponse response,
+				@RequestParam(name="file", defaultValue = "", required = false) String file
+			) throws IOException {
+		// 이런식으로 값 받아와도 됨 ㅎㅎ 
+		//String file = request.getParameter("file");
+		
+		String realPath = request.getSession().getServletContext().getRealPath("/resources/data/study/");
+		
+		// input객체로 생성해서 넘겨주어야 한다. (FileInputStream은 서버에서 읽어올 때 사용!)
+		// 이렇게 생성을 해야 String객체로 받을 수 있음? 넘길 수 있음?
+		File downFile = new File(realPath + file);
+		
+		// String 객체에서 한글처리
+		// file이름이 한글로 넘어올 수 있기 때문에 깨지는 것을 방지하기 위하여 한글처리해줌
+		String downFileName = new String(file.getBytes("UTF-8"), "8859_1");
+		//
+		response.setHeader("Content-Disposition", "attachment:filename=" + downFileName);
+		
+		FileInputStream fis = new FileInputStream(downFile); // 예외 처리한 거 원래는 FileNotFoundException 이게 들어가는 IOException으로 바꿔줌!
+		
+		// 준비 끝
+		
+		// 실제 파일 던지기
+		// ServletOutputStream에 담아서 http통신 response를 통하여 클라이언트에 던진다.
+		ServletOutputStream sos = response.getOutputStream();
+		
+		byte[] bytes = new byte[2048];
+		int data = 0;
+		while((data = fis.read(bytes,0 , bytes.length)) != -1) {
+			// ServletOutputStream로 담아서 클라이언트로 보낸다...
+			sos.write(bytes,0,data);
+		}
+		// 혹시라도 찌꺼기 남아 있을 까봐.
+		sos.flush();
+		// 닫아주기
+		sos.close();
+		fis.close();
+		
 	}
 }

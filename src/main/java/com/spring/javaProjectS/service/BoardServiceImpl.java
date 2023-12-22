@@ -83,7 +83,7 @@ public class BoardServiceImpl implements BoardService {
 		try {
 			// input은 가져오는 거! 
 			FileInputStream fis = new FileInputStream(new File(origFilePath));
-			// 덮어씌움!
+			// 덮어씌움! (파일 저장!)
 			FileOutputStream fos = new FileOutputStream(new File(copyFilePath));
 			
 			byte[] bytes = new byte[2048]; //2k나 4k 정도를 넘기는게 적당하다고 함.

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spring.javaProjectS.dao.BoardDAO;
+import com.spring.javaProjectS.dao.PdsDAO;
 
 // 일하는 애니까.. 일하는 애인지 알려주기 위한 서비스 붙여주기..
 @Service
@@ -11,6 +12,9 @@ public class PageProcess {
 	// 필요한 자료 스캔
 	@Autowired
 	BoardDAO boardDAO;
+	
+	@Autowired
+	PdsDAO pdsDAO;
 	
 	// section이라는 변수를 사용하여 게시판인지, 자료실인지를 알려주는 것(대분류)
 	// part는 소분류.. ex) 자료실에(section) 학습(part)을 들어갈거양
@@ -32,6 +36,7 @@ public class PageProcess {
 				totRecCnt = boardDAO.totRecCntSearch(search,searchString);
 			}
 		}
+		else if(section.equals("pds")) totRecCnt = pdsDAO.totRecCnt(part);
 		
 		int totPage = (totRecCnt % pageSize)==0 ? (totRecCnt / pageSize) : (totRecCnt / pageSize) + 1;
 		int startIndexNo = (pag - 1) * pageSize;
