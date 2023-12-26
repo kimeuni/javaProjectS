@@ -89,7 +89,8 @@
 		<br/>
 		<div>
 			<!-- <input type="button" value="파일박스추가" onclick="fileBoxAppent()" class="btn btn-info btn-sm mb-2"/> -->
-			<input type="file"name="file" id="fName1" multiple class="form-control-file border mb-2"/>
+			<label for="fName1"><img src="${ctp}/images/image.png"></label> 
+			<input type="file"name="file" id="fName1" style="display:none" multiple class="form-control-file border mb-2"/>
 		</div>
 		<!-- <div id="fileBoxAppend"></div> -->
 		<div class="mb-2">

@@ -7,7 +7,7 @@
 		let ans1 = confirm("회원 탈퇴 하시겠습니까?");
 		if(ans1) {
 			let ans2 = confirm("정말로 회원 탈퇴 하시겠습니까? \n탈퇴 후 30일간 같은 아이디 및 닉네임은 사용이 불가능합니다.");
-			if(ans2){
+			if(ans2){<s
 				location.href="${ctp}/member/memberDelOk?mid="+mid;
 			}
 		}

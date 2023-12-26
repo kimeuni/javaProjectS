@@ -16,6 +16,9 @@
       background-color: #eee;
       width: 150px;
     }
+    #content{
+    	width: 500px;
+    }
   </style>
   <script>
     'use strict'; 

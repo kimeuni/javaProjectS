@@ -1,7 +1,19 @@
 package com.spring.javaProjectS.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -98,5 +110,96 @@ public class PdsController {
 		else return "0";
 		
 		return res+"";
+	}
+	
+	// 전체 다운로드
+	@RequestMapping(value = "/pdsTotalDown", method = RequestMethod.GET)
+	public String pdsTotalDownGet(int idx, HttpServletRequest request) throws IOException {
+		// 파일 다운로드횟수 증가
+		pdsService.setPdsDownNumCheck(idx);
+		
+		// 여러개의 파일을 하나의 파일(zip)로 압축(통합)하여 다운로드시켜준다. 압축파일의 이름을 '제목.zip'으로 처리한다.
+		String realPath = request.getSession().getServletContext().getRealPath("/resources/data/pds/");
+		
+		PdsVO vo = pdsService.getIdxSearch(idx);
+		
+		String[] fNames = vo.getFName().split("/");
+		String[] fSNames = vo.getFSName().split("/");
+		
+		// 파일이 압축될 위치 만들기
+		String zipPath = realPath + "temp/";
+		// 파일명 만들기
+		String zipName = vo.getTitle() + ".zip";
+		
+		FileInputStream fis = null;
+		FileOutputStream fos = null;
+		
+		// output의 파일이 출력용(zipoutput)의 파일로 가도록 한다.
+		ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(zipPath + zipName));
+		
+		byte[] bytes = new byte[2048];
+		
+		for(int i=0; i<fNames.length; i++) {
+				
+			// 읽어서
+			fis = new FileInputStream(realPath + fSNames[i]);
+			// 저장하고
+			fos = new FileOutputStream(zipPath + fNames[i]);
+			
+			// fis을 fos에 쓰기작업(파일생성)
+			int data;
+			while((data = fis.read(bytes,0,bytes.length)) != -1) {
+				fos.write(bytes,0,data);
+			}
+			fos.flush();
+			fos.close();
+			fis.close();
+			
+			// fos으로 생성된 파일을 zip파일에 쓰기작업처리
+			File moveAndReName = new File(zipPath + fNames[i]);
+			fis =new FileInputStream(moveAndReName);
+			// zip안에 들어가는 파일명 이름 원본파일명으로 넣겠다.
+			zout.putNextEntry(new ZipEntry(fNames[i]));
+			while((data = fis.read(bytes,0,bytes.length)) != -1) {
+				zout.write(bytes,0,data);
+			}
+			zout.flush();
+			// close로 닫으면 전체가 닫히기 때문에 1개의 객체만 닫기 위해서 closeEntry()를 사용한다.
+			zout.closeEntry();
+			fis.close();
+		}
+		// 작업이 다 끝나면 닫는다.
+		zout.close();
+		
+		// zipName에 한글이면 깨지기 때문에 한글처리를 해야한다. (java.net.URLEncoder.encode => 이렇게 적어주면 한글처리 완료!)
+		return "redirect:/pds/pdsDownAction?file="+java.net.URLEncoder.encode(zipName);
+	}
+	
+	@RequestMapping(value = "/pdsDownAction", method = RequestMethod.GET)
+	public void pdsDownActionGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String file = request.getParameter("file");
+		
+		String downFilePath = request.getSession().getServletContext().getRealPath("/resources/data/pds/temp/") + file;
+		
+		File downFile = new File(downFilePath);
+		String downFileName = new String(file.getBytes("UTF-8"), "8859_1"); // 예외처리 IO로 해주기
+		// url 주소에 담아주기 (헤어에 정보 넣기)
+		response.setHeader("Content-Disposition", "attachment;filename=" + downFileName);
+		
+		FileInputStream fis = new FileInputStream(downFile);
+		ServletOutputStream sos = response.getOutputStream();
+		
+		byte[] bytes = new byte[2048];
+		int data;
+		while((data = fis.read(bytes,0,bytes.length)) != -1) {
+			sos.write(bytes,0,data);
+		}
+		sos.flush();
+		sos.close();
+		fis.close();
+		
+		// 다운로드 완료후에 전송이 끝난 zip파일을 삭제처리.. (함부로 지우면 안됨)
+		downFile.delete();
+		
 	}
 }

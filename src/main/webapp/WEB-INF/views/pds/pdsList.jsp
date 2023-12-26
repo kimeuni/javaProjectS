@@ -61,6 +61,31 @@
     		}
     	});
     }
+    
+    // 상세보기 
+    function modalView(title,nickName,fDate,part,fName,fSName,fSize,downNum){
+    	fDate = fDate.substring(0,19);
+    	// 문자 + 숫자여서 오류가 생기기 때문에 parseInt로 바꿔준다.
+    	fSize = parseInt(fSize / 1024) + "KByte";
+    	let imgFiles = fSName.split("/");
+    	
+    	//$(#myInforModal").on("show.bs.modal",function(e)){
+    		$(".modal-header").html(title);
+    		$(".modal-header #part").html(part);
+    		$(".modal-body #nickName").html(nickName);
+    		$(".modal-body #fDate").html(fDate);
+    		$(".modal-body #fSize").html(fSize);
+    		$(".modal-body #downNum").html(downNum);
+    	//});
+    	
+    	for(let i=0; i<imgFiles.length; i++){
+    		let imgExt = imgFiles[i].substring(imgFiles[i].lastIndexOf(".")+1).toLowerCase();
+    		// 이미지만 출력
+    		if(imgExt == 'jpg' || imgExt == 'gif' || imgExt == 'png'){
+				$(".modal-body #imgSrc").attr("src",'${ctp}/data/pds/'+imgFiles[i]);
+    		}
+    	}
+    }
   </script>
 </head>
 <body>
@@ -125,11 +150,12 @@
 	      </td>
 	      <td>${vo.downNum}</td>
 	      <td>
+	      	<a href="#" onclick="modalView('${vo.title}','${vo.nickName}','${vo.FDate}','${vo.part}','${vo.FName}','${vo.FSName}','${vo.FSize}','${vo.downNum}')" class="badge badge-info" data-toggle="modal" data-target="#myInfoModal">상세보기</a> <br/>
 	        <c:if test="${vo.mid == sMid || sLevel == 0}">
 	          <a href="#" onclick="pdsDeleteCheck('${vo.idx}','${vo.title}')" class="badge badge-danger" data-toggle="modal" data-target="#myModal">삭제</a>
 	        </c:if>
 	        <br/>
-	        <a href="pdsTotalDown.pds?idx=${vo.idx}" class="badge badge-primary">전체다운</a>
+	        <a href="pdsTotalDown?idx=${vo.idx}" class="badge badge-primary">전체다운</a>
 	      </td>
 	    </tr>
     	<c:set var="curScrStartNo" value="${curScrStartNo - 1}"/>
@@ -153,7 +179,7 @@
 </div>
 <!-- 블록페이지 끝 -->
 
-<!-- The Modal -->
+<!-- The Modal(삭제) -->
 <div class="modal fade" id="myModal">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content modal-sm">
@@ -173,6 +199,33 @@
           <input type="button" value="확인" onclick="pdsDeleteOk()" class="btn btn-success form-control" />
           <input type="hidden" name="idx" id="idx"/>
         </form>
+      </div>
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- The Modal(상세보기) -->
+<div class="modal fade" id="myInfoModal">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content modal-sm">
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h5><span id="title"></span>(분류:<span id="part"></span>)</h5>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <!-- Modal body -->
+      <div class="modal-body">
+        <div>올린이 : <span id="nickName"></span></div>
+        <div>올린날짜 : <span id="fDate"></span></div>
+        <div>파일크기 : <span id="fSize"></span></div>
+        <div>다운횟수 : <span id="downNum"></span></div>
+        <hr/>
+        - 저장된파일명 : <span id="fSName"></span><br/>
+        <img id="imgSrc" width="250px"/><br/>
       </div>
       <!-- Modal footer -->
       <div class="modal-footer">
