@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.spring.javaProjectS.vo.KakaoAddressVO;
 import com.spring.javaProjectS.vo.UserVO;
 
 public interface StudyService {
@@ -18,5 +19,13 @@ public interface StudyService {
 	public List<UserVO> getUser2SearchMid(String mid);
 
 	public int fileUpload(MultipartFile fName, String mid);
+
+	public KakaoAddressVO getKakaoAddressSearch(String address);
+
+	public void setKakaoAddressInput(KakaoAddressVO vo);
+
+	public List<KakaoAddressVO> getKakaoAddressList();
+
+	public int setKakaoAddressDelete(String address);
 	
 }
