@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.spring.javaProjectS.dao.StudyDAO;
 import com.spring.javaProjectS.dao.User2DAO;
+import com.spring.javaProjectS.vo.ChartVO;
 import com.spring.javaProjectS.vo.KakaoAddressVO;
 import com.spring.javaProjectS.vo.UserVO;
 
@@ -205,5 +206,10 @@ public class StudyServiceImpl implements StudyService {
 	@Override
 	public int setKakaoAddressDelete(String address) {
 		return studyDAO.setKakaoAddressDelete(address);
+	}
+	
+	@Override
+	public List<ChartVO> getVisitCount() {
+		return studyDAO.getVisitCount();
 	}
 }
