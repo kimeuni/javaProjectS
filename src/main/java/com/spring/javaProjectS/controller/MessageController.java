@@ -169,6 +169,14 @@ public class MessageController {
 			model.addAttribute("msg","자료실에 등록 실패되었습니다.");
 			model.addAttribute("url","pds/pdsInput");
 		}
+		else if(msgFalg.equals("thumbnailCreateOk")) {
+			model.addAttribute("msg","썸네일 이미지가 생성되었습니다.");
+			model.addAttribute("url","study/thumbnail/thumbnailForm");
+		}
+		else if(msgFalg.equals("thumbnailCreateNo")) {
+			model.addAttribute("msg","썸네일 이미지 생성 실패");
+			model.addAttribute("url","study/thumbnail/thumbnailForm");
+		}
 			
 		return "include/message";
 	}

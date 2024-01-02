@@ -33,6 +33,8 @@ import com.spring.javaProjectS.vo.KakaoAddressVO;
 import com.spring.javaProjectS.vo.QrCodeVO;
 import com.spring.javaProjectS.vo.UserVO;
 
+import net.coobird.thumbnailator.Thumbnailator;
+
 @Service
 public class StudyServiceImpl implements StudyService {
 	@Autowired
@@ -425,6 +427,41 @@ public class StudyServiceImpl implements StudyService {
 	@Override
 	public QrCodeVO getQrCodeSearch(String qrCode) {
 		return studyDAO.getQrCodeSearch(qrCode);
+	}
+
+	@Override
+	public int setThumbnailCreate(MultipartFile file) {
+		int res = 0;
+		
+		try {
+			// 중복 이름 피하기
+			UUID uid = UUID.randomUUID();
+			String strUid = uid.toString();
+			String sFileName = strUid.substring(strUid.lastIndexOf("-")+1) + "_" + file.getOriginalFilename();
+		
+			// 지정된 경로에 원본 이미지 저장하기
+			HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest(); 
+			String realPath = request.getSession().getServletContext().getRealPath("/resources/data/study/");
+			File realFileName = new File(realPath + sFileName);
+			file.transferTo(realFileName); // 원본 이미지 저장하기  // 파일을 저장시키는 메소드
+			
+			// 썸네일 이미지 저장하기 (s_ 로 썸네일 구분)
+			String thumbnailSaveName = realPath + "s_" + sFileName;
+			File thumbnailFile = new File(thumbnailSaveName);
+			
+			int width = 160;
+			int height = 120;
+			
+			// 썸네일 만들기
+			Thumbnailator.createThumbnail(realFileName, thumbnailFile, width, height); // 1.저장할 원본파일이름 2. 썸네일 파일 이름 3. 폭 4. 높이
+			
+			res = 1;
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return res;
 	}
 	
 }
