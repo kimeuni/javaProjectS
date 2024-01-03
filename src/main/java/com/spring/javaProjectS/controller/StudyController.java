@@ -499,7 +499,7 @@ public class StudyController {
 	@ResponseBody
 	@RequestMapping(value = "/captcha/randomAlphaNumeric", method = RequestMethod.POST)
 	public String randomAlphaNumericPost() {
-		String res = RandomStringUtils.randomAlphanumeric(64);
+		String res = RandomStringUtils.randomAlphanumeric(64).substring(0,10);
 		return res;
 	}
 	
