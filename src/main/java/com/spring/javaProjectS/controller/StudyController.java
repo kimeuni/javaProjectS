@@ -25,6 +25,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.jsoup.Connection;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -665,6 +670,40 @@ public class StudyController {
 		if(res == 1) return "redirect:/message/thumbnailCreateOk";
 		else return "redirect:/message/thumbnailCreateNo";
 		
+	}
+	
+	// jsoup를 이용한 웹크롤링 폼 보기
+	@RequestMapping(value = "/crawling/jsoup", method = RequestMethod.GET)
+	public String crawlingJsoupGet() {
+		return "study/crawling/jsoup";
+	}
+	
+	// jsoup를 이용한 웹크롤링 처리하기
+	@ResponseBody
+	@RequestMapping(value = "/crawling/jsoup", method = RequestMethod.POST)
+	public ArrayList<String> crawlingJsoupPost(String url, String selector) throws Exception {
+		Connection conn = Jsoup.connect(url);
+		
+		Document document = conn.get();
+//		System.out.println("document : " + document);
+		
+		//Element는 첫번째 거 1개만 가져오고 Elements는 전부다 가져온다는 차이가 있다.
+//		Elements selects = document.select(".cjs_t");
+//		Elements selects = document.select("div.cjs_news_mw");
+		Elements selects = document.select(selector);
+		//System.out.println("selects" + selects);
+		
+		ArrayList<String> vos = new ArrayList<String>();
+		int i = 0;
+		for(Element select : selects) {
+			i++;
+//			System.out.println(i + " : " + select);
+//			System.out.println(i + " : " + select.text());
+			System.out.println(i + " : " + select.html());
+			vos.add(i + " : " + select.html());
+		}
+		
+		return vos;
 	}
 	
 }
