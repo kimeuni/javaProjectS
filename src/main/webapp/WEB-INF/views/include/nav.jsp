@@ -50,6 +50,7 @@
 	        <a href="${ctp}/errorPage/errorMain" class="w3-bar-item w3-button">Error 연습</a>
 	        <a href="${ctp}/study/thumbnail/thumbnailForm" class="w3-bar-item w3-button">썸네일 연습</a>
 	        <a href="${ctp}/study/crawling/jsoup" class="w3-bar-item w3-button">크롤링(jsoup)</a>
+	        <a href="${ctp}/study/transaction/transaction" class="w3-bar-item w3-button">트랜잭션</a>
 	      </div>
 	    </div>
 	    <div class="w3-dropdown-hover w3-hide-small">

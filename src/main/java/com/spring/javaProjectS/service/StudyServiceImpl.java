@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,6 +32,7 @@ import com.spring.javaProjectS.dao.User2DAO;
 import com.spring.javaProjectS.vo.ChartVO;
 import com.spring.javaProjectS.vo.KakaoAddressVO;
 import com.spring.javaProjectS.vo.QrCodeVO;
+import com.spring.javaProjectS.vo.TransactionVO;
 import com.spring.javaProjectS.vo.UserVO;
 
 import net.coobird.thumbnailator.Thumbnailator;
@@ -462,6 +464,37 @@ public class StudyServiceImpl implements StudyService {
 		}
 		
 		return res;
+	}
+
+	@Override
+	public List<TransactionVO> getTranscationList() {
+		return studyDAO.getTranscationList();
+	}
+
+	@Override
+	public void setTransactionUser1Input(TransactionVO vo) {
+		studyDAO.setTransactionUser1Input(vo);
+	}
+
+	@Override
+	public void setTransactionUser2Input(TransactionVO vo) {
+		studyDAO.setTransactionUser2Input(vo);
+	}
+
+	@Override
+	public List<TransactionVO> getTranscationList2() {
+		return studyDAO.getTranscationList2();
+	}
+
+	@Transactional
+	@Override
+	public int setTransactionUserInput(TransactionVO vo) {
+		return studyDAO.setTransactionUserInput(vo);
+	}
+
+	@Override
+	public int setTransactionUserInput2(String mid, String name, int age, String address, String jab) {
+		return studyDAO.setTransactionUserInput2(mid, name, age,address,jab);
 	}
 	
 }

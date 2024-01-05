@@ -177,6 +177,10 @@ public class MessageController {
 			model.addAttribute("msg","썸네일 이미지 생성 실패");
 			model.addAttribute("url","study/thumbnail/thumbnailForm");
 		}
+		else if(msgFalg.equals("validateNo")) {
+			model.addAttribute("msg","백앤드 체크 오류");
+			model.addAttribute("url","/");
+		}
 			
 		return "include/message";
 	}

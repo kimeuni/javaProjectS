@@ -36,7 +36,10 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,6 +53,7 @@ import com.spring.javaProjectS.vo.ChartVO;
 import com.spring.javaProjectS.vo.KakaoAddressVO;
 import com.spring.javaProjectS.vo.MailVO;
 import com.spring.javaProjectS.vo.QrCodeVO;
+import com.spring.javaProjectS.vo.TransactionVO;
 import com.spring.javaProjectS.vo.UserVO;
 
 @Controller
@@ -706,4 +710,47 @@ public class StudyController {
 		return vos;
 	}
 	
+	// 트랜잭션 화면 보기
+	@RequestMapping(value = "/transaction/transaction", method = RequestMethod.GET)
+	public String transactionGet(Model model) {
+		List<TransactionVO> vos = studyService.getTranscationList();
+		List<TransactionVO> vos2 = studyService.getTranscationList2();
+		
+		model.addAttribute("vos", vos);
+		model.addAttribute("vos2", vos2);
+		
+		return "study/transaction/transaction";
+	}
+	
+	// 트랜잭션을 통한 한개의 작업단위로 처리시켜준다. (어노테이션 방법으로 처리 : @Transactional) 
+	@Transactional
+	@RequestMapping(value = "/transaction/transaction", method = RequestMethod.POST)
+	public String transactionPost(TransactionVO vo, Model model) {
+		studyService.setTransactionUser1Input(vo);
+		studyService.setTransactionUser2Input(vo);
+		
+		return "redirect:/study/transaction/transaction";
+	}
+	
+	//user와 user2의 일괄 삽입 작업처리
+	@ResponseBody
+	@RequestMapping(value = "/transaction/transaction2", method = RequestMethod.GET)
+	public String transaction2Post(@Validated TransactionVO vo, Model model, BindingResult bindingResult) { 
+//	public String transaction2Post(Model model,
+//				String mid,
+//				String name,
+//				int age,
+//				String address,
+//				String jab
+//			) {
+		System.out.println("mid : " + vo);
+		
+		//벨리데이트 백엔드 처리
+		if(bindingResult.hasFieldErrors()) return "redirect:/message/validateNo";
+		int res = 0;
+		res = studyService.setTransactionUserInput(vo);
+//		studyService.setTransactionUserInput2(mid,name,age,address,jab);
+		
+		return res + "";
+	}
 }

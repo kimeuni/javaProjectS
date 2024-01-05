@@ -262,6 +262,14 @@
 		    <version>1.16.1</version>
 		</dependency>
 		
+		<!-- Transaction(트렌잭션)처리를 위한 라이브러리 스프링프레임워크의 버젼과 동일한 버전으로 처리) -->
+		<!-- https://mvnrepository.com/artifact/org.springframework/spring-tx -->
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-tx</artifactId>
+		    <version>4.3.14.RELEASE</version>
+		</dependency>
+				
 		     
 	</dependencies>
     <build>

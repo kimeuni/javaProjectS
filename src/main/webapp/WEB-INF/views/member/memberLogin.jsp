@@ -170,7 +170,7 @@
 				</tr>
 				<tr>
 					<th>비밀번호</th>
-					<td><input type="password" name="pwd" id="pwd" value="1234" required class="form-control" /></td>
+					<td><input type="password" name="pwd" id="pwd" value="f7fb2b39" required class="form-control" /></td>
 				</tr>
 				<tr>
 					<td colspan="2" class="text-center">
